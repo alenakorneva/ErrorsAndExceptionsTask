@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public enum Faculties {
     ECONOMIC_FACULTY ("Economic Faculty"),
@@ -17,12 +18,7 @@ public enum Faculties {
     }
 
     public static ArrayList<Faculties> getListOfFaculties() {
-        ArrayList<Faculties> faculties = new ArrayList<Faculties>() {{
-            add(ECONOMIC_FACULTY);
-            add(ELECTROTECHNICAL_FACULTY);
-            add(CIVIL_CONSTRUCTION_FACULTY);
-            add(TRANSPORTATION_MANAGEMENT_FACULTY);
-        }};
+        ArrayList<Faculties> faculties = new ArrayList<>(Arrays.asList(Faculties.values()));
         return faculties;
     }
 }

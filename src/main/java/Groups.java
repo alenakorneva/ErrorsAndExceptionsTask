@@ -1,42 +1,34 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public enum Groups {
-    ECONOMIC_FACULTY_GROUP1("Economic Faculty", "Group 1"),
-    ECONOMIC_FACULTY_GROUP2("Economic Faculty", "Group 2"),
-    ELECTROTECHNICAL_FACULTY_GROUP1("Electrotechnical Faculty", "Group 1"),
-    ELECTROTECHNICAL_FACULTY_GROUP2 ("Electrotechnical Faculty", "Group 2"),
-    CIVIL_CONSTRUCTION_FACULTY_GROUP1("Civil Construction Faculty", "Group 1"),
-    CIVIL_CONSTRUCTION_FACULTY_GROUP2("Civil Construction Faculty", "Group 2"),
-    TRANSPORTATION_MANAGEMENT_FACULTY_GROUP1("Transportation Management Faculty", "Group 1"),
-    TRANSPORTATION_MANAGEMENT_FACULTY_GROUP2("Transportation Management Faculty", "Group 2");
+    ECONOMIC_FACULTY_GROUP1(Faculties.ECONOMIC_FACULTY, "Group 1"),
+    ECONOMIC_FACULTY_GROUP2(Faculties.ECONOMIC_FACULTY, "Group 2"),
+    ELECTROTECHNICAL_FACULTY_GROUP1(Faculties.ELECTROTECHNICAL_FACULTY, "Group 1"),
+    ELECTROTECHNICAL_FACULTY_GROUP2(Faculties.ELECTROTECHNICAL_FACULTY, "Group 2"),
+    CIVIL_CONSTRUCTION_FACULTY_GROUP1(Faculties.CIVIL_CONSTRUCTION_FACULTY, "Group 1"),
+    CIVIL_CONSTRUCTION_FACULTY_GROUP2(Faculties.CIVIL_CONSTRUCTION_FACULTY, "Group 2"),
+    TRANSPORTATION_MANAGEMENT_FACULTY_GROUP1(Faculties.TRANSPORTATION_MANAGEMENT_FACULTY, "Group 1"),
+    TRANSPORTATION_MANAGEMENT_FACULTY_GROUP2(Faculties.TRANSPORTATION_MANAGEMENT_FACULTY, "Group 2");
 
     private String groupTitle;
-    private String facultyGroupRelatesTo;
+    private Faculties facultyGroupRelatesTo;
 
-    Groups(String groupFaculty, String groupTitle){
+    Groups(Faculties groupFaculty, String groupTitle) {
         this.facultyGroupRelatesTo = groupFaculty;
         this.groupTitle = groupTitle;
     }
 
-    public String getFacultyGroupRelatesTo(){
+    public Faculties getFacultyGroupRelatesTo() {
         return facultyGroupRelatesTo;
     }
 
-    public String getGroupTitle(){
+    public String getGroupTitle() {
         return groupTitle;
     }
 
-    public static ArrayList<Groups> getListOfGroups(){
-        ArrayList <Groups> groups = new ArrayList<Groups>(){{
-            add(Groups.ECONOMIC_FACULTY_GROUP1);
-            add(Groups.ECONOMIC_FACULTY_GROUP2);
-            add(Groups.ELECTROTECHNICAL_FACULTY_GROUP1);
-            add(Groups.ELECTROTECHNICAL_FACULTY_GROUP2);
-            add(Groups.CIVIL_CONSTRUCTION_FACULTY_GROUP1);
-            add(Groups.CIVIL_CONSTRUCTION_FACULTY_GROUP2);
-            add(Groups.TRANSPORTATION_MANAGEMENT_FACULTY_GROUP1);
-            add(Groups.TRANSPORTATION_MANAGEMENT_FACULTY_GROUP2);
-        }};
+    public static ArrayList<Groups> getListOfGroups() {
+        ArrayList<Groups> groups = new ArrayList<>(Arrays.asList(Groups.values()));
         return groups;
     }
 

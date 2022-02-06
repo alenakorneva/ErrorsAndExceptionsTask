@@ -2,7 +2,9 @@ import exceptions.StudentsAbsenceInGroupException;
 import subjects.Subjects;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class University {
     private final List<? extends Student> students;
@@ -19,17 +21,12 @@ public class University {
     public double countAverageScoreOfAllSubjects(Student studentToCountAverageScore) {
         int sum = 0;
         int amount = 0;
-        for (Integer mark : studentToCountAverageScore.getFirstSubjectMarks()) {
-            sum += mark;
-            amount += 1;
-        }
-        for (Integer mark : studentToCountAverageScore.getSecondSubjectMarks()) {
-            sum += mark;
-            amount += 1;
-        }
-        for (Integer mark : studentToCountAverageScore.getThirdSubjectMarks()) {
-            sum += mark;
-            amount += 1;
+        Collection<ArrayList<Integer>> marksOfAllSubjects = studentToCountAverageScore.getSubjectsWithMarks().values();
+        for (ArrayList<Integer> marks : marksOfAllSubjects) {
+            for (Integer mark : marks) {
+                sum += mark;
+                amount += 1;
+            }
         }
         return sum / amount;
     }
@@ -39,20 +36,13 @@ public class University {
         int amount = 0;
         for (Student student : students) {
             if (student.getGroup().equals(requiredGroup) && student.getFaculty().equals(requiredFaculty)) {
-                if (student.getFirstSubject().equals(requiredSubject)) {
-                    for (Integer mark : student.getFirstSubjectMarks()) {
-                        sum += mark;
-                        amount += 1;
-                    }
-                } else if (student.getSecondSubject().equals(requiredSubject)) {
-                    for (Integer mark : student.getFirstSubjectMarks()) {
-                        sum += mark;
-                        amount += 1;
-                    }
-                } else {
-                    for (Integer mark : student.getThirdSubjectMarks()) {
-                        sum += mark;
-                        amount += 1;
+                Set<Subjects> studentsSubjects = student.getSubjectsWithMarks().keySet();
+                for (Subjects subject : studentsSubjects) {
+                    if (subject.equals(requiredSubject)) {
+                        for (Integer mark : student.getSubjectsWithMarks().get(subject)) {
+                            sum += mark;
+                            amount += 1;
+                        }
                     }
                 }
             }
@@ -66,20 +56,13 @@ public class University {
         int amount = 0;
         for (Student student : students) {
             if (student.getFaculty().equals(requiredFaculty)) {
-                if (student.getFirstSubject().equals(requiredSubject)) {
-                    for (Integer mark : student.getFirstSubjectMarks()) {
-                        sum += mark;
-                        amount += 1;
-                    }
-                } else if (student.getSecondSubject().equals(requiredSubject)) {
-                    for (Integer mark : student.getFirstSubjectMarks()) {
-                        sum += mark;
-                        amount += 1;
-                    }
-                } else {
-                    for (Integer mark : student.getThirdSubjectMarks()) {
-                        sum += mark;
-                        amount += 1;
+                Set<Subjects> studentsSubjects = student.getSubjectsWithMarks().keySet();
+                for (Subjects subject : studentsSubjects) {
+                    if (subject.equals(requiredSubject)) {
+                        for (Integer mark : student.getSubjectsWithMarks().get(subject)) {
+                            sum += mark;
+                            amount += 1;
+                        }
                     }
                 }
             }
@@ -90,11 +73,10 @@ public class University {
     public University(List<? extends Student> students) {
         this.students = students;
         List<Groups> groups = new ArrayList<>(Groups.getListOfGroups());
-        //не работает
         for (Groups group : groups) {
             boolean hasSomeStudents = false;
             for (Student student : this.students) {
-                if (student.getGroup() == group) {
+                if (student.getGroup().equals(group)) {
                     hasSomeStudents = true;
                     break;
                 } else {
@@ -102,9 +84,7 @@ public class University {
                 }
             }
             try {
-                if (hasSomeStudents) {
-                    break;
-                } else {
+                if (!hasSomeStudents) {
                     throw new StudentsAbsenceInGroupException("The group " + group.toString() + " has no students.");
                 }
             } catch (StudentsAbsenceInGroupException e) {

@@ -3,7 +3,10 @@ import exceptions.InappropriateMarkException;
 import exceptions.SubjectsAbsenceException;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class Student {
     private final int id;
@@ -17,24 +20,86 @@ public class Student {
     private ArrayList<Integer> secondSubjectMarks;
     private Subjects thirdSubject;
     private ArrayList<Integer> thirdSubjectMarks;
+    private Map<Subjects, ArrayList<Integer>> subjectsWithMarks = new Map<Subjects, ArrayList<Integer>>() {
+        @Override
+        public int size() {
+            return subjectsWithMarks.size();
+        }
 
-    private Student(Builder builder) {
+        @Override
+        public boolean isEmpty() {
+            return subjectsWithMarks == null;
+        }
+
+        @Override
+        public boolean containsKey(Object key) {
+            return !subjectsWithMarks.containsKey(key);
+        }
+
+        @Override
+        public boolean containsValue(Object value) {
+            return !subjectsWithMarks.containsValue(value);
+        }
+
+        @Override
+        public ArrayList<Integer> get(Object key) {
+            return subjectsWithMarks.get(key);
+        }
+
+        @Override
+        public ArrayList<Integer> put(Subjects key, ArrayList<Integer> value) {
+            return subjectsWithMarks.put(key, value);
+        }
+
+        @Override
+        public ArrayList<Integer> remove(Object key) {
+            return subjectsWithMarks.remove(key);
+        }
+
+        @Override
+        public void putAll(Map<? extends Subjects, ? extends ArrayList<Integer>> m) {
+            subjectsWithMarks.putAll(m);
+        }
+
+        @Override
+        public void clear() {
+            subjectsWithMarks.clear();
+        }
+
+        @Override
+        public Set<Subjects> keySet() {
+            return subjectsWithMarks.keySet();
+        }
+
+        @Override
+        public Collection<ArrayList<Integer>> values() {
+            return subjectsWithMarks.values();
+        }
+
+        @Override
+        public Set<Entry<Subjects, ArrayList<Integer>>> entrySet() {
+            return subjectsWithMarks.entrySet();
+        }
+
+        {
+            put(firstSubject, firstSubjectMarks);
+            put(secondSubject, secondSubjectMarks);
+            put(thirdSubject, thirdSubjectMarks);
+        }
+    };
+
+    private Student(Builder builder) throws SubjectsAbsenceException {
         id = builder.id;
         studentName = builder.studentName;
         studentSurname = builder.studentSurname;
         faculty = builder.faculty;
         group = builder.group;
-        try {
-            if (builder.firstSubject == null && builder.secondSubject == null && builder.thirdSubject == null) {
-                throw new SubjectsAbsenceException("Student " + studentName + " " + studentSurname + " hasn't got any subjects");
-            } else {
-                firstSubject = builder.firstSubject;
-                secondSubject = builder.secondSubject;
-                thirdSubject = builder.thirdSubject;
-            }
-        } catch (SubjectsAbsenceException e) {
-            e.getMessage();
-            e.printStackTrace();
+        if (builder.firstSubject == null && builder.secondSubject == null && builder.thirdSubject == null) {
+            throw new SubjectsAbsenceException("Student " + studentName + " " + studentSurname + " hasn't got any subjects");
+        } else {
+            firstSubject = builder.firstSubject;
+            secondSubject = builder.secondSubject;
+            thirdSubject = builder.thirdSubject;
         }
         firstSubjectMarks = builder.firstSubjectMarks;
         secondSubjectMarks = builder.secondSubjectMarks;
@@ -61,10 +126,6 @@ public class Student {
         return group;
     }
 
-    public String getGroupName() {
-        return group.getGroupTitle();
-    }
-
     public Subjects getFirstSubject() {
         return firstSubject;
     }
@@ -87,6 +148,10 @@ public class Student {
 
     public ArrayList<Integer> getThirdSubjectMarks() {
         return thirdSubjectMarks;
+    }
+
+    public Map<Subjects, ArrayList<Integer>> getSubjectsWithMarks() {
+        return subjectsWithMarks;
     }
 
     public static class Builder {
@@ -119,60 +184,46 @@ public class Student {
             return this;
         }
 
-        public Builder setFirstSubjectAndMarks(Subjects firstSubjectToInitialize, Integer... marks) {
+        public Builder setFirstSubjectAndMarks(Subjects firstSubjectToInitialize, Integer... marks) throws InappropriateMarkException {
             firstSubject = firstSubjectToInitialize;
             for (Integer mark : marks) {
-                try {
-                    if (mark > 0 && mark <= 10) {
-                        firstSubjectMarks.add(mark);
-                    } else {
-                        throw new InappropriateMarkException(mark + " this mark for " + firstSubjectToInitialize.toString() + " студента " + studentName + " " + studentSurname + " is not in an appropriate range");
-                    }
-                } catch (InappropriateMarkException e) {
-                    e.getMessage();
-                    e.printStackTrace();
+                if (mark > 0 && mark <= 10) {
+                    firstSubjectMarks.add(mark);
+                } else {
+                    throw new InappropriateMarkException(mark + " this mark for " + firstSubjectToInitialize.toString() + " студента " + studentName + " " + studentSurname + " is not in an appropriate range");
                 }
             }
             return this;
         }
 
-        public Builder setSecondSubjectAndMarks(Subjects secondSubjectToInitialize, Integer... marks) {
+        public Builder setSecondSubjectAndMarks(Subjects secondSubjectToInitialize, Integer... marks) throws InappropriateMarkException {
             secondSubject = secondSubjectToInitialize;
             for (Integer mark : marks) {
-                try {
-                    if (mark > 0 && mark <= 10) {
-                        secondSubjectMarks.add(mark);
-                    } else {
-                        throw new InappropriateMarkException(mark + " this mark for " + secondSubjectToInitialize.toString() + " " + studentName + " " + studentSurname + " is not in an appropriate range");
-                    }
-                } catch (InappropriateMarkException e) {
-                    e.getMessage();
-                    e.printStackTrace();
+                if (mark > 0 && mark <= 10) {
+                    secondSubjectMarks.add(mark);
+                } else {
+                    throw new InappropriateMarkException(mark + " this mark for " + secondSubjectToInitialize.toString() + " " + studentName + " " + studentSurname + " is not in an appropriate range");
                 }
             }
             return this;
         }
 
-        public Builder thirdSubjectAndMarks(Subjects thirdSubjectToInitialize, Integer... marks) {
+        public Builder thirdSubjectAndMarks(Subjects thirdSubjectToInitialize, Integer... marks) throws InappropriateMarkException {
             thirdSubject = thirdSubjectToInitialize;
             for (Integer mark : marks) {
-                try {
-                    if (mark > 0 && mark <= 10) {
-                        thirdSubjectMarks.add(mark);
-                    } else {
-                        throw new InappropriateMarkException(mark + " this mark for " + thirdSubjectToInitialize.toString() + " " + studentName + " " + studentSurname + " is not in an appropriate range");
-                    }
-                } catch (InappropriateMarkException e) {
-                    e.getMessage();
-                    e.printStackTrace();
+                if (mark > 0 && mark <= 10) {
+                    thirdSubjectMarks.add(mark);
+                } else {
+                    throw new InappropriateMarkException(mark + " this mark for " + thirdSubjectToInitialize.toString() + " " + studentName + " " + studentSurname + " is not in an appropriate range");
                 }
             }
             return this;
         }
 
-        public Student build() {
+        public Student build() throws SubjectsAbsenceException {
             return new Student(this);
         }
+
     }
 
     @Override
